@@ -1,5 +1,4 @@
 import itertools
-import operator
 
 from django.db.models import Count, Min
 
@@ -19,21 +18,27 @@ class TimeTable(object):
     def rooms(self):
         qs = Room.objects.all()
         qs = qs.filter(schedule=self.day.schedule)
-        qs = qs.filter(pk__in=SlotRoom.objects.filter(slot__in=self.slots_qs().values("pk")).values("room"))
+        qs = qs.filter(
+            pk__in=SlotRoom.objects.filter(
+                slot__in=self.slots_qs().values("pk")
+            ).values("room"))
         qs = qs.order_by("order")
         return qs
 
     def __iter__(self):
-        times = sorted(set(itertools.chain(*self.slots_qs().values_list("start", "end"))))
+        times = sorted(set(itertools.chain(*self.slots_qs()
+            .values_list("start", "end"))))
         slots = Slot.objects.filter(pk__in=self.slots_qs().values("pk"))
-        slots = slots.annotate(room_count=Count("slotroom"), order=Min("slotroom__room__order"))
+        slots = slots.annotate(
+            room_count=Count("slotroom"), order=Min("slotroom__room__order"))
         slots = slots.order_by("start", "order")
         row = []
         for time, next_time in pairwise(times):
             row = {"time": time, "slots": []}
             for slot in slots:
                 if slot.start == time:
-                    slot.rowspan = TimeTable.rowspan(times, slot.start, slot.end)
+                    slot.rowspan = TimeTable.rowspan(times, slot.start,
+                        slot.end)
                     slot.colspan = slot.room_count
                     row["slots"].append(slot)
             if row["slots"] or next_time is None:

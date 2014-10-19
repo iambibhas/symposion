@@ -72,4 +72,3 @@ def sponsor_levels(parser, token):
     {% sponsor_levels as levels %}
     """
     return SponsorLevelNode.handle_token(parser, token)
-

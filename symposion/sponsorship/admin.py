@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from symposion.sponsorship.models import SponsorLevel, Sponsor, Benefit, BenefitLevel, SponsorBenefit
+from symposion.sponsorship.models import (SponsorLevel, Sponsor, Benefit,
+    BenefitLevel, SponsorBenefit)
 
 
 class BenefitLevelInline(admin.TabularInline):

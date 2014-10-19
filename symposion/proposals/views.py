@@ -23,6 +23,7 @@ from symposion.proposals.forms import AddSpeakerForm, SupportingDocumentCreateFo
 
 sha_constructor = hashlib.sha1
 
+
 def get_form(name):
     dot = name.rindex('.')
     mod_name, form_name = name[:dot], name[dot + 1:]

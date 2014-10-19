@@ -70,4 +70,3 @@ def associated_proposals(parser, token):
     {% associated_proposals as associated_proposals %}
     """
     return AssociatedProposalsNode.handle_token(parser, token)
-

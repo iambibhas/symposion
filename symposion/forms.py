@@ -26,5 +26,6 @@ class SignupForm(account.forms.SignupForm):
         email_confirm = self.cleaned_data["email_confirm"]
         if email:
             if email != email_confirm:
-                raise forms.ValidationError("Email address must match previously typed email address")
+                raise forms.ValidationError("Email address must match \
+                    previously typed email address")
         return email_confirm

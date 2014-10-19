@@ -1,4 +1,3 @@
-import html5lib
 from html5lib import html5parser, sanitizer
 
 import markdown

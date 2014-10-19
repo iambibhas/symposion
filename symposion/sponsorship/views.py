@@ -5,7 +5,8 @@ from django.template import RequestContext
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from symposion.sponsorship.forms import SponsorApplicationForm, SponsorDetailsForm, SponsorBenefitsFormSet
+from symposion.sponsorship.forms import (SponsorApplicationForm,
+    SponsorDetailsForm, SponsorBenefitsFormSet)
 from symposion.sponsorship.models import Sponsor, SponsorBenefit
 
 
