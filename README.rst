@@ -1,21 +1,8 @@
 Symposion
 ---------
 
-.. image:: https://img.shields.io/travis/pinax/symposion.svg
-    :target: https://travis-ci.org/pinax/symposion
-
-.. image:: https://img.shields.io/coveralls/pinax/symposion.svg
-    :target: https://coveralls.io/r/pinax/symposion
-
-.. image:: https://img.shields.io/pypi/dm/symposion.svg
-    :target:  https://pypi.python.org/pypi/symposion/
-
-.. image:: https://img.shields.io/pypi/v/symposion.svg
-    :target:  https://pypi.python.org/pypi/symposion/
-
-.. image:: https://img.shields.io/badge/license-MIT-blue.svg
-    :target:  https://pypi.python.org/pypi/symposion/
-
+.. image:: https://img.shields.io/travis/iambibhas/symposion.svg
+    :target: https://travis-ci.org/iambibhas/symposion
 
 
 A conference management solution from Eldarion.
@@ -24,10 +11,12 @@ Built with the generous support of the Python Software Foundation.
 
 See http://eldarion.com/symposion/ for commercial support, customization and hosting
 
+**Note**: This is a forked version. [The original version](https://github.com/pinax/pinax-project-symposion) is compatible upto Django 1.4.5. This fork works with Django 1.7+ and Python 2.7. 
+
 Quickstart
 ==========
 
 If you're interested in running symposion locally, we have built a [basic
 Django startproject template that includes Symposion][1].
 
-[1]: https://github.com/pinax/pinax-project-symposion
+[1]: https://github.com/iambibhas/django-symposion-template
