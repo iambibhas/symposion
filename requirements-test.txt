@@ -1,5 +1,5 @@
 Django==1.7
-Pillow==1.7.8
+Pillow==2.6.1
 django-discover-runner==1.0
 django-markitup==2.2.2
 django-model-utils==1.1.0
