@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 
 PAGE_RE = r"(([\w-]{1,})(/[\w-]{1,})*)/"
 

@@ -1,3 +1,4 @@
+# settings is needed for internal view
 from django.conf import settings
 
 from appconf import AppConf

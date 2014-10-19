@@ -1,5 +1,3 @@
-import re
-
 from django.core.mail import send_mass_mail
 from django.db.models import Q
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed

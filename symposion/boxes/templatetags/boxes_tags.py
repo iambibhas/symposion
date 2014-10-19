@@ -1,10 +1,5 @@
 from django import template
-from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
-from django.utils.safestring import mark_safe
-from django.utils.encoding import smart_str
-from django.utils.translation import ugettext_lazy as _
-from django.template.defaulttags import kwarg_re
 
 from symposion.boxes.models import Box
 from symposion.boxes.forms import BoxForm

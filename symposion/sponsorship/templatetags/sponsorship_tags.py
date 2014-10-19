@@ -52,7 +52,8 @@ class SponsorLevelNode(template.Node):
 
     def render(self, context):
         conference = current_conference()
-        context[self.context_var] = SponsorLevel.objects.filter(conference=conference)
+        context[self.context_var] = SponsorLevel.objects\
+            .filter(conference=conference).select_related()
         return u""
 
 
