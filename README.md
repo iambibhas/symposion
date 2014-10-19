@@ -1,8 +1,7 @@
 Symposion
 ---------
 
-.. image:: https://img.shields.io/travis/iambibhas/symposion.svg
-    :target: https://travis-ci.org/iambibhas/symposion
+[![](https://img.shields.io/travis/iambibhas/symposion.svg)](https://travis-ci.org/iambibhas/symposion)
 
 
 A conference management solution from Eldarion.
