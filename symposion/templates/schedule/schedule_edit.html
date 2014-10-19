@@ -18,13 +18,13 @@
     <div class="row">
         <div class="span12">
             <h1>Schedule Edit</h1>
-            
+
             {% for timetable in days %}
                 <h2>{{ timetable.day.date }}</h2>
                 {% include "schedule/_edit_grid.html" %}
             {% endfor %}
         </div>
-        
+
         <div class="modal fade hide in" id="slotEditModal"></div>
     </div>
 {% endblock %}

@@ -20,17 +20,17 @@ def get_auth_vars(request):
 
 @require_POST
 def box_edit(request, label):
-    
+
     if not load_can_edit()(request, **get_auth_vars(request)):
         return HttpResponseForbidden()
-    
+
     next = request.GET.get("next")
-    
+
     try:
         box = Box.objects.get(label=label)
     except Box.DoesNotExist:
         box = None
-    
+
     form = BoxForm(request.POST, instance=box, prefix=label)
 
     if form.is_valid():

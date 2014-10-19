@@ -4,7 +4,7 @@ import account.forms
 
 
 class SignupForm(account.forms.SignupForm):
-    
+
     first_name = forms.CharField()
     last_name = forms.CharField()
     email_confirm = forms.EmailField(label="Confirm Email")
@@ -20,7 +20,7 @@ class SignupForm(account.forms.SignupForm):
             "password",
             "password_confirm"
         ]
-    
+
     def clean_email_confirm(self):
         email = self.cleaned_data.get("email")
         email_confirm = self.cleaned_data["email_confirm"]

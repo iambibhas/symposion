@@ -10,7 +10,7 @@ def speakers():
     guido = User.objects.create_user("guido", "guido@python.org", "pythonisawesome")
     matz = User.objects.create_user("matz", "matz@ruby.org", "pythonsucks")
     larry = User.objects.create_user("larryw", "larry@perl.org", "linenoisehere")
-    
+
     Speaker.objects.create(
         user=guido,
         name="Guido van Rossum",

@@ -6,6 +6,6 @@ from symposion.reviews.models import ProposalResult
 
 
 class Command(BaseCommand):
-    
+
     def handle(self, *args, **options):
         ProposalResult.full_calculate()
