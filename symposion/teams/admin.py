@@ -5,7 +5,8 @@ import reversion
 from symposion.teams.models import Team, Membership
 
 admin.site.register(Team,
-                    prepopulated_fields={"slug": ("name",)})
+    prepopulated_fields={"slug": ("name",)},
+)
 
 
 class MembershipAdmin(reversion.VersionAdmin):

@@ -1,11 +1,8 @@
-# flake8: noqa
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, include, url
 
 
 urlpatterns = patterns("symposion.reviews.views",
-    url(r"^section/(?P<section_slug>[\w\-]+)/all/$", "review_section", {"reviewed": "all"}, name="review_section"),
-    url(r"^section/(?P<section_slug>[\w\-]+)/reviewed/$", "review_section", {"reviewed": "reviewed"}, name="user_reviewed"),
-    url(r"^section/(?P<section_slug>[\w\-]+)/not_reviewed/$", "review_section", {"reviewed": "not_reviewed"}, name="user_not_reviewed"),
+    url(r"^section/(?P<section_slug>[\w\-]+)/$", "review_section", name="review_section"),
     url(r"^section/(?P<section_slug>[\w\-]+)/assignments/$", "review_section", {"assigned": True}, name="review_section_assignments"),
     url(r"^section/(?P<section_slug>[\w\-]+)/status/$", "review_status", name="review_status"),
     url(r"^section/(?P<section_slug>[\w\-]+)/status/(?P<key>\w+)/$", "review_status", name="review_status"),

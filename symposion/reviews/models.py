@@ -44,8 +44,6 @@ class ReviewAssignment(models.Model):
     OPT_IN = 1
     AUTO_ASSIGNED_LATER = 2
 
-    NUM_REVIEWERS = 3
-
     ORIGIN_CHOICES = [
         (AUTO_ASSIGNED_INITIAL, "auto-assigned, initial"),
         (OPT_IN, "opted-in"),
@@ -58,7 +56,7 @@ class ReviewAssignment(models.Model):
     origin = models.IntegerField(choices=ORIGIN_CHOICES)
 
     assigned_at = models.DateTimeField(default=datetime.now)
-    opted_out = models.BooleanField()
+    opted_out = models.BooleanField(default=False)
 
     @classmethod
     def create_assignments(cls, proposal, origin=AUTO_ASSIGNED_INITIAL):
@@ -68,10 +66,7 @@ class ReviewAssignment(models.Model):
                 speaker.user_id
                 for speaker in speakers
                 if speaker.user_id is not None
-            ] + [
-                assignment.user_id
-                for assignment in ReviewAssignment.objects.filter(
-                    proposal_id=proposal.id)]
+            ]
         ).filter(
             groups__name="reviewers",
         ).filter(
@@ -79,11 +74,9 @@ class ReviewAssignment(models.Model):
         ).annotate(
             num_assignments=models.Count("reviewassignment")
         ).order_by(
-            "num_assignments", "?",
+            "num_assignments",
         )
-        num_assigned_reviewers = ReviewAssignment.objects.filter(
-            proposal_id=proposal.id, opted_out=0).count()
-        for reviewer in reviewers[:max(0, cls.NUM_REVIEWERS - num_assigned_reviewers)]:
+        for reviewer in reviewers[:3]:
             cls._default_manager.create(
                 proposal=proposal,
                 user=reviewer,
@@ -117,11 +110,11 @@ class Review(models.Model):
     def save(self, **kwargs):
         if self.vote:
             vote, created = LatestVote.objects.get_or_create(
-                proposal=self.proposal,
-                user=self.user,
-                defaults=dict(
-                    vote=self.vote,
-                    submitted_at=self.submitted_at,
+                proposal = self.proposal,
+                user = self.user,
+                defaults = dict(
+                    vote = self.vote,
+                    submitted_at = self.submitted_at,
                 )
             )
             if not created:
@@ -152,8 +145,7 @@ class Review(models.Model):
             if self == latest:
                 # self is the latest review; revert the latest vote to the
                 # previous vote
-                previous = user_reviews.filter(submitted_at__lt=self.submitted_at)\
-                    .order_by("-submitted_at")[0]
+                previous = user_reviews.filter(submitted_at__lt=self.submitted_at).order_by("-submitted_at")[0]
                 self.proposal.result.update_vote(self.vote, previous=previous.vote, removal=True)
                 lv = LatestVote.objects.filter(proposal=self.proposal, user=self.user)
                 lv.update(
@@ -232,20 +224,20 @@ class ProposalResult(models.Model):
             result.comment_count = Review.objects.filter(proposal=proposal).count()
             result.vote_count = LatestVote.objects.filter(proposal=proposal).count()
             result.plus_one = LatestVote.objects.filter(
-                proposal=proposal,
-                vote=VOTES.PLUS_ONE
+                proposal = proposal,
+                vote = VOTES.PLUS_ONE
             ).count()
             result.plus_zero = LatestVote.objects.filter(
-                proposal=proposal,
-                vote=VOTES.PLUS_ZERO
+                proposal = proposal,
+                vote = VOTES.PLUS_ZERO
             ).count()
             result.minus_zero = LatestVote.objects.filter(
-                proposal=proposal,
-                vote=VOTES.MINUS_ZERO
+                proposal = proposal,
+                vote = VOTES.MINUS_ZERO
             ).count()
             result.minus_one = LatestVote.objects.filter(
-                proposal=proposal,
-                vote=VOTES.MINUS_ONE
+                proposal = proposal,
+                vote = VOTES.MINUS_ONE
             ).count()
             result.save()
             cls._default_manager.filter(pk=result.pk).update(score=ProposalScoreExpression())
@@ -289,7 +281,7 @@ class Comment(models.Model):
     public = models.BooleanField(choices=[
         (True, "public"),
         (False, "private"),
-    ])
+    ], default=False)
     commented_at = models.DateTimeField(default=datetime.now)
 
 
@@ -304,8 +296,7 @@ class NotificationTemplate(models.Model):
 class ResultNotification(models.Model):
 
     proposal = models.ForeignKey("proposals.ProposalBase", related_name="notifications")
-    template = models.ForeignKey(NotificationTemplate, null=True, blank=True,
-                                 on_delete=models.SET_NULL)
+    template = models.ForeignKey(NotificationTemplate, null=True, blank=True, on_delete=models.SET_NULL)
     timestamp = models.DateTimeField(default=datetime.now)
     to_address = models.EmailField()
     from_address = models.EmailField()
@@ -323,12 +314,12 @@ def promote_proposal(proposal):
         presentation = proposal.presentation
     else:
         presentation = Presentation(
-            title=proposal.title,
-            description=proposal.description,
-            abstract=proposal.abstract,
-            speaker=proposal.speaker,
-            section=proposal.section,
-            proposal_base=proposal,
+            title = proposal.title,
+            description = proposal.description,
+            abstract = proposal.abstract,
+            speaker = proposal.speaker,
+            section = proposal.section,
+            proposal_base = proposal,
         )
         presentation.save()
         for speaker in proposal.additional_speakers.all():

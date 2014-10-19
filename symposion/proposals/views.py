@@ -3,11 +3,10 @@ import sys
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.hashcompat import sha_constructor
+import hashlib
 from django.views import static
 
 from django.contrib import messages
@@ -22,9 +21,10 @@ from symposion.utils.mail import send_email
 
 from symposion.proposals.forms import AddSpeakerForm, SupportingDocumentCreateForm
 
+sha_constructor = hashlib.sha1
 
 def get_form(name):
-    dot = name.rindex(".")
+    dot = name.rindex('.')
     mod_name, form_name = name[:dot], name[dot + 1:]
     __import__(mod_name)
     return getattr(sys.modules[mod_name], form_name)
@@ -32,18 +32,11 @@ def get_form(name):
 
 def proposal_submit(request):
     if not request.user.is_authenticated():
-        messages.info(request, "To submit a proposal, please "
-                      "<a href='{0}'>log in</a> and create a speaker profile "
-                      "via the dashboard.".format(settings.LOGIN_URL))
         return redirect("home")  # @@@ unauth'd speaker info page?
     else:
         try:
             request.user.speaker_profile
         except ObjectDoesNotExist:
-            url = reverse("speaker_create")
-            messages.info(request, "To submit a proposal, first "
-                          "<a href='{0}'>create a speaker "
-                          "profile</a>.".format(url))
             return redirect("dashboard")
 
     kinds = []
@@ -143,13 +136,13 @@ def proposal_speaker_manage(request, pk):
                     # fire off email to user to create profile
                     send_email(
                         [email_address], "speaker_no_profile",
-                        context=message_ctx
+                        context = message_ctx
                     )
                 else:
                     # fire off email to user letting them they are loved.
                     send_email(
                         [email_address], "speaker_addition",
-                        context=message_ctx
+                        context = message_ctx
                     )
             else:
                 speaker, token = create_speaker_token(email_address)
@@ -158,10 +151,9 @@ def proposal_speaker_manage(request, pk):
                 # account and speaker profile
                 send_email(
                     [email_address], "speaker_invite",
-                    context=message_ctx
+                    context = message_ctx
                 )
-            invitation, created = AdditionalSpeaker.objects.get_or_create(
-                proposalbase=proposal.proposalbase_ptr, speaker=speaker)
+            invitation, created = AdditionalSpeaker.objects.get_or_create(proposalbase=proposal.proposalbase_ptr, speaker=speaker)
             messages.success(request, "Speaker invited to proposal.")
             return redirect("proposal_speaker_manage", proposal.pk)
     else:
@@ -320,8 +312,7 @@ def proposal_leave(request, pk):
 @login_required
 def proposal_pending_join(request, pk):
     proposal = get_object_or_404(ProposalBase, pk=pk)
-    speaking = get_object_or_404(AdditionalSpeaker, speaker=request.user.speaker_profile,
-                                 proposalbase=proposal)
+    speaking = get_object_or_404(AdditionalSpeaker, speaker=request.user.speaker_profile, proposalbase=proposal)
     if speaking.status == AdditionalSpeaker.SPEAKING_STATUS_PENDING:
         speaking.status = AdditionalSpeaker.SPEAKING_STATUS_ACCEPTED
         speaking.save()
@@ -334,8 +325,7 @@ def proposal_pending_join(request, pk):
 @login_required
 def proposal_pending_decline(request, pk):
     proposal = get_object_or_404(ProposalBase, pk=pk)
-    speaking = get_object_or_404(AdditionalSpeaker, speaker=request.user.speaker_profile,
-                                 proposalbase=proposal)
+    speaking = get_object_or_404(AdditionalSpeaker, speaker=request.user.speaker_profile, proposalbase=proposal)
     if speaking.status == AdditionalSpeaker.SPEAKING_STATUS_PENDING:
         speaking.status = AdditionalSpeaker.SPEAKING_STATUS_DECLINED
         speaking.save()
